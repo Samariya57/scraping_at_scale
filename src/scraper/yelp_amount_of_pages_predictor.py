@@ -36,12 +36,11 @@ def main():
     categories = ['chinese']
     zipcodes = ['10010']
     today = datetime.datetime.today().strftime('%Y-%m-%d')
-        # get numbers for all combinations and write them to db
+    # get numbers for all combinations and write them to db
     for category in categories:
         for zipcode in zipcodes:
-            # current_numbers = get_number_of_restaurants(category, zipcode)
+            current_numbers = get_number_of_restaurants(category, zipcode)
             cur.execute(sql_in_queue, (zipcode, category, current_numbers[0], current_numbers[1], today, False))
-
     conn.commit()
     cur.close()
     conn.close()
