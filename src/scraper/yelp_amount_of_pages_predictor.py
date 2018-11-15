@@ -2,6 +2,7 @@
 import urllib2
 import datetime
 import psycopg2
+import os
 from bs4 import BeautifulSoup
 
 
@@ -17,8 +18,7 @@ def get_number_of_restaurants(category, zipcode):
     # Get number of restaurants for current criteria
     total_number = int(parsed_page.find('span', attrs={'class': 'pagination-results-window'}).text.split()[-1])
     number_per_page = int(parsed_page.find('span', attrs={'class': 'pagination-results-window'}).text.split()[1].split("-")[-1])
-    today = datetime.datetime.today().strftime('%Y-%m-%d')
-    return (number_per_page, total_number, today)
+    return (number_per_page, total_number)
 
 def main():
     '''
@@ -27,19 +27,24 @@ def main():
     return:
     rtype:
     '''
-    conn = psycopg2.connect("dbname=yelp user=airflow password=postgres")
+    HOST=os.environ['HOST']
+    PASSWORD=os.environ['PGPASSWORD']
+    conn = psycopg2.connect("host="+HOST+" port='5432' dbname=yelp user=airflow password="+PASSWORD)
     cur = conn.cursor()
-    sql = "INSERT INTO queue ( Url, NumberPerPage, TotalNumber, Added, Scrapped) VALUES (%s, %s, %s, %s, %s);"
+    sql_in_queue = "INSERT INTO queue (Zipcode, Category, NumberPerPage, TotalNumber, Added, Scrapped) VALUES (%s, %s, %s, %s, %s, %s);"
     # get lists of categories and zipcodes
     categories = ['chinese']
-    zipcodes = [10010]
-    # get numbers for all combinations and write them to db
+    zipcodes = ['10010']
+    today = datetime.datetime.today().strftime('%Y-%m-%d')
+        # get numbers for all combinations and write them to db
     for category in categories:
         for zipcode in zipcodes:
-            current_numbers = get_number_of_restaurants(category, zipcode)
-            cur.execute(sql, (current_numbers))
+            # current_numbers = get_number_of_restaurants(category, zipcode)
+            cur.execute(sql_in_queue, (zipcode, category, current_numbers[0], current_numbers[1], today, False))
+
     conn.commit()
     cur.close()
+    conn.close()
 
 
 if __name__ == '__main__':
