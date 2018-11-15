@@ -4,4 +4,5 @@ GRANT ALL PRIVILEGES on database airflow to ubuntu;
 ALTER ROLE ubuntu SUPERUSER;
 ALTER ROLE ubuntu CREATEDB;
 ALTER ROLE ubuntu WITH LOGIN;
+\c airflow
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO ubuntu;
