@@ -20,6 +20,8 @@ CREATE TABLE restaurants{
 /* Create a table for queue or URLs*/
 CREATE TABLE queue{
   Url TEXT NOT NULL,
+  NumberPerPage NUMBER NULL,
+  TotalNumber NUMBER NULL,
   Added TIMESTAMP NOT NULL,
   Scrapped BOOLEAN NOT NULL
 }
