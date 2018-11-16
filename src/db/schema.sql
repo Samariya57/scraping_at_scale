@@ -24,7 +24,7 @@ CREATE TABLE queue (
   NumberPerPage INTEGER NULL,
   TotalNumber INTEGER NULL,
   Added TIMESTAMP NOT NULL,
-  Scrapped BOOLEAN NOT NULL
+  Scrapped BOOLEAN DEFAULT false
 );
 
 /* Create a table for IP tracker */
@@ -33,3 +33,7 @@ CREATE TABLE ips (
   Scrapped TIMESTAMP NOT NULL,
   Count INTEGER
 );
+
+/* Grant permissions for the group of scrapers */
+GRANT ALL ON SCHEMA public TO GROUP Scrapers;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO GROUP Scrapers;
