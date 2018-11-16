@@ -23,7 +23,10 @@ data "aws_ami" "ubuntu" {
 resource "aws_instance" "web" {
   ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "t2.medium"
-
+  vpc_security_group_ids = ['vpc-6baf940d']
+  key_name = 'postgres_prep'
+  subnet_id = 'subnet-35a16a7d'
+  security_groups = ['launch-wizard-6']
   tags {
     Name = "Yelp_scraper"
   }
