@@ -13,6 +13,14 @@ resource "aws_instance" "example" {
   tags {
       Name = "Yelp_scraper"
   }
+  connection {
+  # The default username for our AMI
+  user = "ubuntu"
+  agent = "false"
+  private_key = "${file(var.private_key_path)}"
+
+  # The connection will use the local SSH agent for authentication.
+  }
   provisioner "remote-exec" {
   inline = [
     "sudo apt-get install python-setuptools",
@@ -27,6 +35,6 @@ resource "aws_instance" "example" {
     "cd yelp_updates",
     "git checkout develop",
     "python src/scraper/yelp_one_page_restaurant_reader.py"
-  ]
-}
+    ]
+  }
 }
