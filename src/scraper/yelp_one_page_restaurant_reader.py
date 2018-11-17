@@ -4,6 +4,8 @@ import datetime
 import psycopg2
 import requests
 import os
+import random
+from time import sleep
 from bs4 import BeautifulSoup
 
 def clean_string(word):
@@ -92,10 +94,12 @@ def main():
     Function for getting next url in a Queue, retrieve, parse, and store to the DB
     '''
     # get next combination (or subpage) from the DB
-    current_url = "https://www.yelp.com/search?find_desc=food&find_loc=New+York+10027&start=10&cflt=desserts"
-    restaurants_from_page = get_all_restaurants_from_one_page(current_url)
-    only_new_restaurants = get_only_new_restaurants(restaurants_from_page)
-    add_restaurants(only_new_restaurants)
+    for i in range(5):
+        current_url = "https://www.yelp.com/search?find_desc=food&find_loc=New+York+10027&start="+str(i*10)+"&cflt=desserts"
+        restaurants_from_page = get_all_restaurants_from_one_page(current_url)
+        only_new_restaurants = get_only_new_restaurants(restaurants_from_page)
+        add_restaurants(only_new_restaurants)
+        sleep(random.randint(30, 60))
 
 
 

@@ -50,16 +50,15 @@ def main():
     cur = conn.cursor()
     sql_in_queue = "INSERT INTO queue (Zipcode, Category, NumberPerPage, TotalNumber, Added, Scrapped) VALUES (%s, %s, %s, %s, %s, %s);"
     # get lists of categories and zipcodes
-    categories = ['chinese','russian']
-    zipcodes = ['10010','10027']
+    categories = ['thai','chinese','russian']
+    zipcodes = ['10010','10011','10009']
     today = datetime.datetime.today().strftime('%Y-%m-%d')
     city = "New York"
     # get numbers for all combinations and write them to db
     try:
-        for category in categories:
-            for zipcode in zipcodes:
+        for zipcode in zipcodes:
+            for category in categories:
                 current_numbers = get_number_of_restaurants(category, city, zipcode)
-                print current_numbers
                 cur.execute(sql_in_queue, (zipcode, category, current_numbers[0], current_numbers[1], today, False))
                 sleep(random.randint(30, 60))
     except:
