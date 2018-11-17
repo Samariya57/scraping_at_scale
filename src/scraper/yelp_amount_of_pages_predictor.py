@@ -3,6 +3,8 @@ import urllib2
 import datetime
 import psycopg2
 import os
+import requests
+import random
 from time import sleep
 from bs4 import BeautifulSoup
 
@@ -20,18 +22,21 @@ def get_connection():
     return conn
 
 
-def get_number_of_restaurants(category, zipcode):
+def get_number_of_restaurants(category, city, zipcode):
     '''
     Function for getting number of restaurants per request and total number of
     restaurants for the combination of zipcode and restaurant type
     arguments: type of restaurant and Zipcode
     return: number restaurants per page, total number and date
     '''
-    current_url = "https://www.yelp.com/search?find_desc=food&find_loc=zipcode+"+zipcode+"&start=0&cflt="+category
-    current_page = urllib2.urlopen(current_url)
+    current_url = "https://www.yelp.com/search?find_desc="+category+"&find_loc="+city.replace(" ","+")+"+"+zipcode
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36'}
+    response = requests.get(current_url, headers=headers, verify=False).text
+    parsed_page = BeautifulSoup(response, "html.parser")
+    showing = [x.find('p') for x in parsed_page.findAll('div') if (x.find('h1') and x.find('p'))]
     # Get number of restaurants for current criteria
-    total_number = int(parsed_page.find('span', attrs={'class': 'pagination-results-window'}).text.split()[-1])
-    number_per_page = int(parsed_page.find('span', attrs={'class': 'pagination-results-window'}).text.split()[1].split("-")[-1])
+    total_number = int(showing[0].text.strip().split()[-1])
+    number_per_page = int(showing[0].text.strip().split()[1].split("-")[-1])
     return (number_per_page, total_number)
 
 def main():
@@ -48,14 +53,15 @@ def main():
     categories = ['chinese','russian']
     zipcodes = ['10010','10027']
     today = datetime.datetime.today().strftime('%Y-%m-%d')
+    city = "New York"
     # get numbers for all combinations and write them to db
     try:
         for category in categories:
             for zipcode in zipcodes:
-                #current_numbers = get_number_of_restaurants(category, zipcode)
+                current_numbers = get_number_of_restaurants(category, city, zipcode)
                 print current_numbers
                 cur.execute(sql_in_queue, (zipcode, category, current_numbers[0], current_numbers[1], today, False))
-                sleep(20)
+                sleep(random.randint(30, 60))
     except:
         print "can't get number"
     finally:

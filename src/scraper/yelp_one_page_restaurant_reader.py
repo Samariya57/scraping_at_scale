@@ -2,7 +2,15 @@
 import urllib2
 import datetime
 import psycopg2
+import requests
+import os
 from bs4 import BeautifulSoup
+
+def clean_string(word):
+    '''
+    Function that replaces some characters and strips text
+    '''
+    return word.replace(u"\u2019", "'").replace(u"\u2018", "'").replace(u"\u0026","&").strip()
 
 def get_connection():
     '''
@@ -24,17 +32,20 @@ def get_all_restaurants_from_one_page(current_url):
     return: list of restaurants info
     rtype: [(restaurant_name, restaurant_address)]
     '''
-    current_page = urllib2.urlopen(current_url)
-    parsed_page = BeautifulSoup(current_page, "html.parser")
-    restaurants2 = parsed_page.findAll('li', attrs={'class': 'regular-search-result'})
-    # Get name and address of all restaurnts from the current page and store them in a list
-    # Also, clean unpritable characters
-    results = []
-    for venue in restaurants2:
-        current_name = venue.find('div', attrs={'class': 'biz-attributes'}).find('span').text.replace(u"\u2019", "'").strip()
-        current_address = venue.find('address').text.replace(u"\u2019", "'").strip()
-        results.append((current_name,current_address))
-    return results
+    #request page with restaurants results
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36'}
+    response = requests.get(current_url, headers=headers, verify=False).text
+    parsed_page = BeautifulSoup(response, "html.parser")
+    #find all listed elements
+    current_restaurants = parsed_page.findAll('li')
+    #find all names and addresses
+    names = [clean_string(x.find('h3').find('a').text) for x in current_restaurants if x.find('h3')]
+    addresses = [clean_string(x.find('address').text) for x in current_restaurants if x.find('address')]
+    if len(names)==len(addresses):
+        #build a list with results
+        return [(names[i], addresses[i]) for i in range(len(names))]
+    else:
+        return None
 
 def get_only_new_restaurants(restaurants):
     '''
