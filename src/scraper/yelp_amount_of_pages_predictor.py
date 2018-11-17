@@ -3,7 +3,22 @@ import urllib2
 import datetime
 import psycopg2
 import os
+from time import sleep
 from bs4 import BeautifulSoup
+
+def get_connection():
+    '''
+    Function to get connection to the DB
+    '''
+    #HOST=os.environ['HOST']
+    #PASSWORD=os.environ['PGPASSWORD']
+    HOST='18.234.194.96'
+    PASSWORD='postgres'
+    try:
+        conn = psycopg2.connect("host="+HOST+" port='5432' dbname=yelp user=airflow password="+PASSWORD)
+    except:
+        print "Coudn't connect to the DB"
+    return conn
 
 
 def get_number_of_restaurants(category, zipcode):
@@ -27,23 +42,26 @@ def main():
     return:
     rtype:
     '''
-    HOST=os.environ['HOST']
-    PASSWORD=os.environ['PGPASSWORD']
-    conn = psycopg2.connect("host="+HOST+" port='5432' dbname=yelp user=airflow password="+PASSWORD)
+    conn = get_connection()
     cur = conn.cursor()
     sql_in_queue = "INSERT INTO queue (Zipcode, Category, NumberPerPage, TotalNumber, Added, Scrapped) VALUES (%s, %s, %s, %s, %s, %s);"
     # get lists of categories and zipcodes
-    categories = ['chinese']
-    zipcodes = ['10010']
+    categories = ['chinese','russian']
+    zipcodes = ['10010','10027']
     today = datetime.datetime.today().strftime('%Y-%m-%d')
     # get numbers for all combinations and write them to db
-    for category in categories:
-        for zipcode in zipcodes:
-            current_numbers = get_number_of_restaurants(category, zipcode)
-            cur.execute(sql_in_queue, (zipcode, category, current_numbers[0], current_numbers[1], today, False))
-    conn.commit()
-    cur.close()
-    conn.close()
+    try:
+        for category in categories:
+            for zipcode in zipcodes:
+                current_numbers = get_number_of_restaurants(category, zipcode)
+                cur.execute(sql_in_queue, (zipcode, category, current_numbers[0], current_numbers[1], today, False))
+                sleep(20)
+    except:
+        print "can't get number"
+    finally:
+        conn.commit()
+        cur.close()
+        conn.close()
 
 
 if __name__ == '__main__':

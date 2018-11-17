@@ -11,9 +11,8 @@ CREATE TABLE combinations (
 
 /* Create a table for all restaurants */
 CREATE TABLE restaurants (
-  RestaurantID TEXT NOT NULL,
-  Address TEXT NOT NULL,
   Name VARCHAR(255) NOT NULL,
+  Address TEXT NOT NULL,
   Added TIMESTAMP NOT NULL
 );
 
