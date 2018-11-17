@@ -12,7 +12,7 @@ def get_connection():
     '''
     #HOST=os.environ['HOST']
     #PASSWORD=os.environ['PGPASSWORD']
-    HOST='18.234.194.96'
+    HOST='18.206.212.99'
     PASSWORD='postgres'
     try:
         conn = psycopg2.connect("host="+HOST+" port='5432' dbname=yelp user=airflow password="+PASSWORD)
