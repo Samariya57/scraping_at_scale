@@ -44,7 +44,11 @@ def main():
     HOST=os.environ['HOST']
     PASSWORD=os.environ['PGPASSWORD']
     print HOST
-    conn = psycopg2.connect("host="+HOST+" port='5432' dbname=yelp user=airflow password="+PASSWORD)
+    print PASSWORD
+    configs = "host="+HOST+" port='5432' dbname=yelp user=airflow password="+PASSWORD
+    print configs
+    #conn = psycopg2.connect("host="+HOST+" port='5432' dbname=yelp user=airflow password="+PASSWORD)
+    conn = psycopg2.connect(configs)
     cur = conn.cursor()
     sql_in_queue = "INSERT INTO queue (Zipcode, Category, NumberPerPage, TotalNumber, Added, Scrapped) VALUES (%s, %s, %s, %s, %s, %s);"
     # get lists of categories and zipcodes
