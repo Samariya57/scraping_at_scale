@@ -41,13 +41,7 @@ def get_all_restaurants_from_one_page(current_url):
     #find all listed elements
     current_restaurants = parsed_page.findAll('li')
     #find all names and addresses
-    names = [clean_string(x.find('h3').find('a').text) for x in current_restaurants if x.find('h3')]
-    addresses = [clean_string(x.find('address').text) for x in current_restaurants if x.find('address')]
-    if len(names)==len(addresses):
-        #build a list with results
-        return [(names[i], addresses[i]) for i in range(len(names))]
-    else:
-        return None
+    return [(clean_string(x.find('address').text),clean_string(x.find('h3').find('a').text)) for x in current_restaurants if (x.find('address') and (x.find('h3')))]
 
 def get_only_new_restaurants(restaurants):
     '''
@@ -95,19 +89,11 @@ def main():
     '''
     # get next combination (or subpage) from the DB
     for i in range(5):
-        current_url = "https://www.yelp.com/search?find_desc=food&find_loc=New+York+10027&start="+str(i*10)+"&cflt=desserts"
+        current_url = "https://www.yelp.com/search?find_desc=food&find_loc=New+York+10027&start="+str(i*30)+"&cflt=desserts"
         restaurants_from_page = get_all_restaurants_from_one_page(current_url)
         only_new_restaurants = get_only_new_restaurants(restaurants_from_page)
         add_restaurants(only_new_restaurants)
         sleep(random.randint(30, 60))
-
-
-
-
-
-
-
-
 
 if __name__ == '__main__':
    main()
