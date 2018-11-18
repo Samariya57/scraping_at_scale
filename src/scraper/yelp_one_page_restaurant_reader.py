@@ -18,6 +18,7 @@ def get_connection():
     '''
     Function to get connection to the DB
     '''
+    os.system("source ~/.bash_profile")
     HOST=os.environ['HOST']
     PASSWORD=os.environ['PGPASSWORD']
     try:
@@ -60,7 +61,6 @@ def get_only_new_restaurants(restaurants):
     for restaurant in restaurants:
         cur.execute("execute myplan (%s, %s)", (restaurant[0], restaurant[1]))
         count = int(cur.fetchone()[0])
-        print count
         if count == 0:
             new_restaurants.append((restaurant[0], restaurant[1], today))
     cur.close()
@@ -89,10 +89,11 @@ def main():
     '''
     # get next combination (or subpage) from the DB
     for i in range(5):
-        current_url = "https://www.yelp.com/search?find_desc=food&find_loc=New+York+10027&start="+str(i*30)+"&cflt=desserts"
+        current_url = "https://www.yelp.com/search?find_desc=food&find_loc=New+York+10027&start="+str((i+1)*30)+"&cflt=desserts"
         restaurants_from_page = get_all_restaurants_from_one_page(current_url)
         only_new_restaurants = get_only_new_restaurants(restaurants_from_page)
-        add_restaurants(only_new_restaurants)
+        if only_new_restaurants:
+            add_restaurants(only_new_restaurants)
         sleep(random.randint(30, 60))
 
 if __name__ == '__main__':
