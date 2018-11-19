@@ -18,7 +18,7 @@ def get_connection():
     '''
     Function to get connection to the DB
     '''
-    os.system("source ~/.env")
+    os.system(". ~/.env")
     HOST=os.environ['HOST']
     PASSWORD=os.environ['PGPASSWORD']
     try:
