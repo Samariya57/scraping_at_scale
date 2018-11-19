@@ -67,9 +67,11 @@ def insert_numbers(City, Zipcode, Category, NumberPerPage, TotalNumber, Processe
     try:
         conn = get_connection()
         cur = conn.cursor()
-        sql_in_queue = "INSERT INTO queue (City, Zipcode, Category, NumberPerPage, TotalNumber, Processed) VALUES (%s, %s, %s, %s, %s, %s);"
-        cur.execute(sql_in_queue, (City, Zipcode, Category, NumberPerPage, TotalNumber, Processed))
+        sql_in_queue = "UPDATE queue SET NumberPerPage=%s, TotalNumber=%s, Processed=%s WHERE Zipcode=%s AND Category=%s;"
+        cur.execute(sql_in_queue, (NumberPerPage, TotalNumber, Processed, Zipcode, Category))
         conn.commit()
+        cur.close()
+        conn.close()
     except:
         print "can't insert numbers"
     finally:
