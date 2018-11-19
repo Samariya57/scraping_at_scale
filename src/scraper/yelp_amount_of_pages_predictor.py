@@ -92,10 +92,6 @@ def main():
             sleep(random.randint(30, 60))
         except:
             print "can't get numbers"
-        finally:
-            conn.commit()
-            cur.close()
-            conn.close()
     return 1
 
 if __name__ == '__main__':
