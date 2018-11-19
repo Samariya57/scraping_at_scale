@@ -1,4 +1,3 @@
-import random
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
@@ -11,15 +10,17 @@ default_args = {
     'email': ['masha@insightdatascience.com'],
     'email_on_failure': True,
     'email_on_retry': False,
-    'retries': 10,
-    'retry_delay': timedelta(minutes=random.randint(1, 10)),
+    'retries': 100,
+    'retry_delay': timedelta(minutes=1),
 }
 
-dag = DAG('empty_ec2', default_args=default_args, schedule_interval=timedelta(days=1))
+dag = DAG('terraform', default_args=default_args, schedule_interval=timedelta(minutes=10))
 
 terraform_command = """
+    cd ~/terraform_ex/with_code/
     terraform init
-    terraform apply
+    terraform apply -auto-approve
+    ip=$(terraform output ip)
 """
 
 t1 = BashOperator(
