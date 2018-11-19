@@ -89,7 +89,7 @@ def main():
         try:
             combo = get_next_combination()
             current_numbers = get_number_of_restaurants(combo[0], combo[1], combo[2])
-            insert_numbers (conbo[1], combo[2], combo[0], current_numbers[0], current_numbers[1],0)
+            insert_numbers (combo[1], combo[2], combo[0], current_numbers[0], current_numbers[1],0)
             sleep(random.randint(30, 60))
         except:
             if "find your location" in current_numbers:
