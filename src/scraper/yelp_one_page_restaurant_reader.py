@@ -62,7 +62,7 @@ def get_only_new_restaurants(restaurants):
         cur.execute("execute myplan (%s, %s)", (restaurant[0], restaurant[1]))
         count = int(cur.fetchone()[0])
         if count == 0:
-            new_restaurants.append((restaurant[0], restaurant[1], today))
+            new_restaurants.append((restaurant[1], restaurant[0], today))
     cur.close()
     conn.close()
     return new_restaurants
