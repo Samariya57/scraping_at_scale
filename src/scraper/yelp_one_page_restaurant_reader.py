@@ -18,7 +18,7 @@ def get_connection():
     '''
     Function to get connection to the DB
     '''
-    os.system("source ~/.bash_profile")
+    os.system("source ~/.env")
     HOST=os.environ['HOST']
     PASSWORD=os.environ['PGPASSWORD']
     try:
