@@ -88,7 +88,7 @@ def main():
     Function for getting next url in a Queue, retrieve, parse, and store to the DB
     '''
     # get next combination (or subpage) from the DB
-    zipcodes = ['10010','10011','10009']
+    zipcodes = ['10027','10029','10037']
     today = datetime.datetime.today().strftime('%Y-%m-%d')
     for zipcode in zipcodes:
         for i in range(5):
