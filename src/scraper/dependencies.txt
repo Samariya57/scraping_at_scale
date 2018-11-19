@@ -1,4 +1,0 @@
- pip install PyHamcrest
- pip install argparse
- pip install BeautifulSoup4
- pip install psycopg2

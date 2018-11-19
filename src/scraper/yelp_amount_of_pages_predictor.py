@@ -90,10 +90,10 @@ def main():
             insert_numbers (conbo[1], combo[2], combo[0], current_numbers[0], current_numbers[1],0)
             sleep(random.randint(30, 60))
         except:
-            if current_numbers=="Oops, we can't find your location":
+            if "find your location" in current_numbers:
                 current_numbers = (1,1)
                 continue
-            elif current_numbers=="Sorry, you’re not allowed to access this page.":
+            else:
                 break
         finally:
             print current_numbers
