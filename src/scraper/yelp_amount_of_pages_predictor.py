@@ -69,10 +69,10 @@ def insert_numbers(City, Zipcode, Category, NumberPerPage, TotalNumber, Processe
         cur = conn.cursor()
         sql_in_queue = "INSERT INTO queue (City, Zipcode, Category, NumberPerPage, TotalNumber, Processed) VALUES (%s, %s, %s, %s, %s, %s);"
         cur.execute(sql_in_queue, (City, Zipcode, Category, NumberPerPage, TotalNumber, Processed))
+        conn.commit()
     except:
         print "can't insert numbers"
     finally:
-        conn.commit()
         cur.close()
         conn.close()
 
@@ -93,7 +93,7 @@ def main():
             if current_numbers=="Oops, we can't find your location":
                 current_numbers = (1,1)
                 continue
-            elif current_numbers="Sorry, you’re not allowed to access this page.":
+            elif current_numbers=="Sorry, you’re not allowed to access this page.":
                 break
         finally:
             print current_numbers
