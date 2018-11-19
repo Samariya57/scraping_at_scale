@@ -33,41 +33,70 @@ def get_number_of_restaurants(category, city, zipcode):
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36'}
     response = requests.get(current_url, headers=headers, verify=False).text
     parsed_page = BeautifulSoup(response, "html.parser")
-    showing = [x.find('p') for x in parsed_page.findAll('div') if (x.find('h1') and x.find('p'))]
-    # Get number of restaurants for current criteria
-    total_number = int(showing[0].text.strip().split()[-1])
-    number_per_page = int(showing[0].text.strip().split()[1].split("-")[-1])
-    return (number_per_page, total_number)
+    try:
+        showing = [x.find('p') for x in parsed_page.findAll('div') if (x.find('h1') and x.find('p'))]
+        # Get number of restaurants for current criteria
+        total_number = int(showing[0].text.strip().split()[-1])
+        number_per_page = int(showing[0].text.strip().split()[1].split("-")[-1])
+        return (number_per_page, total_number)
+    except:
+        print parsed_page.find('h2').text.replace("\u2019","''").strip()
+        return (0,0)
+
+def get_next_combination():
+    '''
+    Function to get next uncounted combination of zipcode and category
+    rtype: (category, city, zipcode)
+    '''
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        next_combo = "SELECT * FROM queue WHERE Processed is NULL LIMIT 1;"
+        cur.execute(next_combo)
+        result = cur.fetchone()
+        return (result[2], result[1], result[0])
+    except:
+        print "Can't fetch data"
+    finally:
+        cur.close()
+        conn.close()
+
+def insert_numbers(City, Zipcode, Category, NumberPerPage, TotalNumber, Processed):
+    '''
+    Function to insert numbers for zipcode and category combination
+    '''
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        sql_in_queue = "INSERT INTO queue (City, Zipcode, Category, NumberPerPage, TotalNumber, Processed) VALUES (%s, %s, %s, %s, %s, %s);"
+        cur.execute(sql_in_queue, (City, Zipcode, Category, NumberPerPage, TotalNumber, Processed))
+    except:
+        print "can't insert numbers"
+    finally:
+        conn.commit()
+        cur.close()
+        conn.close()
 
 def main():
     '''
     Function for getting number of restaurants per request and total number of
     restaurants for all possible combinations
     return:
-    rtype:
     '''
-    conn = get_connection()
-    cur = conn.cursor()
-    sql_in_queue = "INSERT INTO queue (Zipcode, Category, NumberPerPage, TotalNumber, Added, Scrapped) VALUES (%s, %s, %s, %s, %s, %s);"
-    # get lists of categories and zipcodes
-    categories = ['thai','chinese','russian']
-    zipcodes = ['10010','10011','10009']
-    today = datetime.datetime.today().strftime('%Y-%m-%d')
-    city = "New York"
-    # get numbers for all combinations and write them to db
-    try:
-        for zipcode in zipcodes:
-            for category in categories:
-                current_numbers = get_number_of_restaurants(category, city, zipcode)
-                cur.execute(sql_in_queue, (zipcode, category, current_numbers[0], current_numbers[1], today, False))
-                sleep(random.randint(30, 60))
-    except:
-        print "can't get number"
-    finally:
-        conn.commit()
-        cur.close()
-        conn.close()
-
+    current_numbers = (1,1)
+    while (current_numbers[1] > 0):
+        try:
+            combo = get_next_combination()
+            current_numbers = get_number_of_restaurants(combo[0], combo[1], combo[2])
+            insert_numbers (conbo[1], combo[2], combo[0], current_numbers[0], current_numbers[1],0)
+            sleep(random.randint(30, 60))
+        except:
+            print "can't get numbers"
+        finally:
+            conn.commit()
+            cur.close()
+            conn.close()
+    return 1
 
 if __name__ == '__main__':
    main()
