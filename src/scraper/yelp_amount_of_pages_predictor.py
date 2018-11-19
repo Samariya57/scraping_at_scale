@@ -40,8 +40,7 @@ def get_number_of_restaurants(category, city, zipcode):
         number_per_page = int(showing[0].text.strip().split()[1].split("-")[-1])
         return (number_per_page, total_number)
     except:
-        print parsed_page.find('h2').text.replace("\u2019","''").strip()
-        return (0,0)
+        return parsed_page.find('h2').text.replace("\u2019","'").strip()
 
 def get_next_combination():
     '''
@@ -91,7 +90,11 @@ def main():
             insert_numbers (conbo[1], combo[2], combo[0], current_numbers[0], current_numbers[1],0)
             sleep(random.randint(30, 60))
         except:
-            print "can't get numbers"
+            if current_numbers=="Oops, we can't find your location":
+                current_numbers = (1,1)
+                continue
+            else:
+                print current_numbers
     return 1
 
 if __name__ == '__main__':
