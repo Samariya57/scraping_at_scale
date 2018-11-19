@@ -93,8 +93,10 @@ def main():
             if current_numbers=="Oops, we can't find your location":
                 current_numbers = (1,1)
                 continue
-            else:
-                print current_numbers
+            elif current_numbers="Sorry, you’re not allowed to access this page.":
+                break
+        finally:
+            print current_numbers
     return 1
 
 if __name__ == '__main__':
