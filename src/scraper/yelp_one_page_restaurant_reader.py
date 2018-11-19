@@ -88,13 +88,16 @@ def main():
     Function for getting next url in a Queue, retrieve, parse, and store to the DB
     '''
     # get next combination (or subpage) from the DB
-    for i in range(5):
-        current_url = "https://www.yelp.com/search?find_desc=food&find_loc=New+York+10027&start="+str((i+1)*30)+"&cflt=desserts"
-        restaurants_from_page = get_all_restaurants_from_one_page(current_url)
-        only_new_restaurants = get_only_new_restaurants(restaurants_from_page)
-        if only_new_restaurants:
-            add_restaurants(only_new_restaurants)
-        sleep(random.randint(30, 60))
+    zipcodes = ['10010','10011','10009']
+    today = datetime.datetime.today().strftime('%Y-%m-%d')
+    for zipcode in zipcodes:
+        for i in range(5):
+            current_url = "https://www.yelp.com/search?find_desc=food&find_loc=New+York+"+zipcode+"&start="+str(i*30)+"&cflt=desserts"
+            restaurants_from_page = get_all_restaurants_from_one_page(current_url)
+            only_new_restaurants = get_only_new_restaurants(restaurants_from_page)
+            if only_new_restaurants:
+                add_restaurants(only_new_restaurants)
+            sleep(random.randint(30, 60))
 
 if __name__ == '__main__':
    main()
