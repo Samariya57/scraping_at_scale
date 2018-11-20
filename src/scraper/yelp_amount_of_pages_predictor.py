@@ -99,7 +99,6 @@ def main():
                 break
         finally:
             print current_numbers
-    return 1
 
 if __name__ == '__main__':
    main()

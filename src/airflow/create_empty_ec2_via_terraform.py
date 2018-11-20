@@ -12,15 +12,17 @@ default_args = {
     'email_on_retry': False,
     'retries': 100,
     'retry_delay': timedelta(minutes=1),
+    'schedule_interval': '*/10 * * * *'
 }
 
-dag = DAG('terraform', default_args=default_args, schedule_interval=timedelta(minutes=10))
+dag = DAG('terraform', default_args=default_args)
 
 terraform_command = """
     cd ~/terraform_ex/with_code/
     terraform init
     terraform apply -auto-approve
     ip=$(terraform output ip)
+    terraform destroy
 """
 
 t1 = BashOperator(
