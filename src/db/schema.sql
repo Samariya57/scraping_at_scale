@@ -21,7 +21,8 @@ CREATE TABLE combinations (
 CREATE TABLE restaurants (
   Name VARCHAR(255) NOT NULL,
   Address TEXT NOT NULL,
-  Added TIMESTAMP NOT NULL
+  Added TIMESTAMP NOT NULL,
+  Categories TEXT[]
 );
 
 /* Create a table for queue or URLs*/
