@@ -22,7 +22,7 @@ terraform_command = """
     terraform init
     terraform apply -auto-approve
     ip=$(terraform output ip)
-    terraform destroy
+    terraform destroy -auto-approve
 """
 
 t1 = BashOperator(
