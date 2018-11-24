@@ -41,10 +41,9 @@ resource "aws_instance" "scraper" {
       	"sudo pip install psycopg2",
       	"sudo pip install requests",
       	"sudo apt-get install python-lxml -y",
-      	"git clone https://github.com/Samariya57/yelp_updates.git",
-      	"cd yelp_updates",
+      	"git clone https://github.com/Samariya57/scraping_at_scale.git",
+      	"cd scraping_at_scale",
       	". ~/.env",
-        "git checkout develop",
       	"python src/scraper/yelp_one_page_restaurant_reader.py"
      ]
   }
