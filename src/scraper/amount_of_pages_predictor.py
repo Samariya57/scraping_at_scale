@@ -1,5 +1,4 @@
 # import libraries
-import urllib2
 import datetime
 import psycopg2
 import os
