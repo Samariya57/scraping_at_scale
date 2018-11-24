@@ -1,0 +1,3 @@
+# Schema design
+
+<image TBD>
