@@ -12,4 +12,5 @@ You should know that services are tracking activity from each IP and user agents
 
 ## My approach for ratating mechanism
 
-
+### Pipeline
+![alt text](https://github.com/Samariya57/scraping_at_scale/blob/master/images/pipeline.png "Scraping pipeline")
