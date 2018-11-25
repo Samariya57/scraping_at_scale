@@ -22,7 +22,7 @@ def get_connection():
     HOST=os.environ['HOST']
     PASSWORD=os.environ['PGPASSWORD']
     try:
-        conn = psycopg2.connect("host="+HOST+" port='5432' dbname=yelp user=airflow password="+PASSWORD)
+        conn = psycopg2.connect("host="+HOST+" port='5432' dbname= user=airflow password="+PASSWORD)
     except:
         print "Coudn't connect to the DB"
     return conn
@@ -92,7 +92,7 @@ def main():
     today = datetime.datetime.today().strftime('%Y-%m-%d')
     for zipcode in zipcodes:
         for i in range(5):
-            current_url = "https://www.yelp.com/search?find_desc=food&find_loc=New+York+"+zipcode+"&start="+str(i*30)+"&cflt=desserts"
+            current_url = "https://www.service.com/search?find_desc=food&find_loc=New+York+"+zipcode+"&start="+str(i*30)+"&cflt=desserts"
             restaurants_from_page = get_all_restaurants_from_one_page(current_url)
             only_new_restaurants = get_only_new_restaurants(restaurants_from_page)
             if only_new_restaurants:

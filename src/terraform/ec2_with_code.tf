@@ -12,7 +12,7 @@ resource "aws_instance" "scraper" {
   subnet_id              = "${var.subnet}"
 
   tags {
-    Name = "yelp_scraper"
+    Name = "service_scraper"
   }
 
   connection {
@@ -44,7 +44,7 @@ resource "aws_instance" "scraper" {
       	"git clone https://github.com/Samariya57/scraping_at_scale.git",
       	"cd scraping_at_scale",
       	". ~/.env",
-      	"python src/scraper/yelp_one_page_restaurant_reader.py"
+      	"python src/scraper/one_page_reader.py"
      ]
   }
 }

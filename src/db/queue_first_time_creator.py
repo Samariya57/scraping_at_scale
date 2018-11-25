@@ -11,7 +11,7 @@ def get_connection():
     '''
     HOST=os.environ['HOST']
     PASSWORD=os.environ['PGPASSWORD']
-    configs = "host="+HOST+" port='5432' dbname=yelp user=airflow password="+PASSWORD
+    configs = "host="+HOST+" port='5432' dbname= user=airflow password="+PASSWORD
     try:
         conn = psycopg2.connect(configs)
     except:
