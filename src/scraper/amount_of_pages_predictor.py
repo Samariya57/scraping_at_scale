@@ -13,7 +13,7 @@ def get_connection():
     '''
     HOST=os.environ['HOST']
     PASSWORD=os.environ['PGPASSWORD']
-    configs = "host="+HOST+" port='5432' dbname=yelp user=airflow password="+PASSWORD
+    configs = "host="+HOST+" port='5432' dbname= user=airflow password="+PASSWORD
     try:
         conn = psycopg2.connect(configs)
     except:
@@ -28,7 +28,7 @@ def get_number_of_restaurants(category, city, zipcode):
     arguments: type of restaurant and Zipcode
     return: number restaurants per page, total number and date
     '''
-    current_url = "https://www.yelp.com/search?find_desc="+category+"&find_loc="+city.replace(" ","+")+"+"+zipcode
+    current_url = "https://www.service.com/search?find_desc="+category+"&find_loc="+city.replace(" ","+")+"+"+zipcode
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36'}
     response = requests.get(current_url, headers=headers, verify=False).text
     parsed_page = BeautifulSoup(response, "html.parser")
